@@ -1,3 +1,5 @@
+// Simple Rust CLI chat with Gemini AI
+
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::{

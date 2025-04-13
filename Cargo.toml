@@ -1,8 +1,8 @@
 [package]
 name = "gemini-chat"
-description = "Simple Rust CLI chat for Gemini AI"
+description = "Simple Rust CLI chat with Gemini AI"
 authors = ["Vi+ <vitaliyy@gmail.com>"]
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]

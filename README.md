@@ -1,4 +1,4 @@
-## Simple Rust CLI chat for Gemini AI
+## Simple Rust CLI chat with Gemini AI
 
 ```shell
  ✗ export GEMINI_API_KEY=XXX  # free from https://aistudio.google.com/app/apikey
