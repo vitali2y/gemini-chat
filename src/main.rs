@@ -1,14 +1,9 @@
-use clap::Parser;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::env;
-
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct Args {
-    /// The prompt to send to Gemini AI
-    prompt: String,
-}
+use std::{
+    env,
+    io::{self, Read},
+};
 
 #[derive(Serialize)]
 struct RequestBody {
@@ -25,44 +20,60 @@ struct Part {
     text: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
 struct ResponseBody {
     candidates: Vec<Candidate>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
 struct Candidate {
     content: ResponseContent,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
 struct ResponseContent {
     parts: Vec<ResponsePart>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
 struct ResponsePart {
     text: String,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dotenv::dotenv().ok();
-    let args = Args::parse();
-
     let api_key = env::var("GEMINI_API_KEY").expect("GEMINI_API_KEY env var not set!");
-    let url = format!(
+    let api_url = format!(
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={}",
         api_key
     );
 
+    let args: Vec<String> = env::args().collect();
+
+    let mut prompt: String = "".to_string();
+    if args.len() == 2
+    // prompt as an arg
+    {
+        prompt = args[1].clone()
+    } else
+    // prompt as a stdin pipe
+    {
+        io::stdin()
+            .read_to_string(&mut prompt)
+            .expect("failed to read stdin");
+    }
+
     let request_body = RequestBody {
         contents: vec![Content {
-            parts: vec![Part { text: args.prompt }],
+            parts: vec![Part { text: prompt }],
         }],
     };
 
-    let response = Client::new().post(&url).json(&request_body).send().await?;
+    let response = Client::new()
+        .post(&api_url)
+        .json(&request_body)
+        .send()
+        .await?;
     if !response.status().is_success() {
         eprintln!("error: {}", response.status());
         eprintln!("response: {:?}", response.text().await?);

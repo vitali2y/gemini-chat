@@ -2,20 +2,13 @@
 
 ```shell
  ✗ export GEMINI_API_KEY=XXX  # free from https://aistudio.google.com/app/apikey
- ✗ cargo r --release  # building
+ ✗  # building
+ ✗ cargo r --release
 ~...~
- ✗ ./target/release/gemini-chat --help
-Simple Rust CLI chat for Gemini AI
-
-Usage: gemini-chat <PROMPT>
-
-Arguments:
-  <PROMPT>  The prompt to send to Gemini AI
-
-Options:
-  -h, --help     Print help
-  -V, --version  Print version
- ✗ ./target/release/gemini-chat "In Rust what is the difference between Fn, FnMut, and FnOnce?"  # testing
+ ✗  # testing
+ ✗ ./target/release/gemini-chat "In Rust what is the difference between Fn, FnMut, and FnOnce?"  # simple prompt as a CLI param
+~...~
+ ✗ cat my_question.md | ./target/release/gemini-chat  # prompt as a stdin pipe, e. g. from Markdown file with your code and detailed question
 ~...~
  ✗
 ```
